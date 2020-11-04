@@ -6,8 +6,6 @@ from twitchio.dataclasses import Context, Message, Channel
 from twitchio.ext import commands
 
 from giveaway_cog import GiveawayGog
-from info_cog import InfoCog
-from pipi_cog import PipiCog
 from vote_cog import VoteCog
 
 load_dotenv()
@@ -29,14 +27,8 @@ class HaugeBot(commands.Bot, ABC):
         self.PREFIX = os.getenv("PREFIX")
         super().__init__(irc_token=IRC_TOKEN, prefix=PREFIX, nick=NICK, initial_channels=[CHANNEL], client_id=CLIENT_ID,
                          client_secret=CLIENT_SECRET)
-        self.pipi_cog = PipiCog(self)
-        self.giveaway_cog = GiveawayGog(self)
-        self.vote_cog = VoteCog(self)
-        self.info_cog = InfoCog(self)
-        self.add_cog(self.pipi_cog)
-        self.add_cog(self.giveaway_cog)
-        self.add_cog(self.vote_cog)
-        self.add_cog(self.info_cog)
+        self.add_cog(GiveawayGog(self))
+        self.add_cog(VoteCog(self))
 
     @staticmethod
     async def send_me(ctx, content, color):
@@ -51,8 +43,6 @@ class HaugeBot(commands.Bot, ABC):
 
     async def event_ready(self):
         print('Logged in')
-        await self.pipi_cog.start_pipimeter_loop()
-        await self.info_cog.start_info_loop()
 
     @staticmethod
     def get_percentage(part, total):
@@ -73,12 +63,4 @@ class HaugeBot(commands.Bot, ABC):
 
 
 bot = HaugeBot()
-
-
-@bot.command(name="hauge-commands", aliases=["Hauge-commands", "haugebot-commands", "Haugebot-commands"])
-async def cmd_haugebot_commands(ctx):
-    await ctx.send(
-        "Eine Liste mit den Commands des HaugeBot findest du unter: https://github.com/dnns01/TwitchHausGeist/blob/master/README.md")
-
-
 bot.run()

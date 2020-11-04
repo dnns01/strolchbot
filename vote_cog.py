@@ -4,8 +4,6 @@ import time
 
 from twitchio.ext import commands
 
-import vote_redis
-
 
 @commands.core.cog(name="VoteCog")
 class VoteCog:
@@ -23,7 +21,6 @@ class VoteCog:
         self.vote_task_new = None
         self.votes = {}
         self.bot.add_listener(self.event_message)
-        self.redis = vote_redis.VoteRedis()
 
     async def notify_vote_result(self, message, final_result=False):
         votes_list = self.get_votes()
@@ -52,7 +49,6 @@ class VoteCog:
 
         self.votes.clear()
         self.vote_task_new = asyncio.create_task(self.vote_block_votes())
-        self.update_redis()
 
     async def vote_interim_voting(self, channel):
         """ End a currently open voting """
@@ -120,15 +116,3 @@ class VoteCog:
 
         # add vote to dict
         self.votes[ctx.author.name] = votetype
-        self.update_redis()
-
-    def update_redis(self):
-        """analyzes the votes-dict and counts the votes"""
-
-        if self.redis.is_connected:
-            votes = self.get_votes()
-            p = self.redis.pipeline()  # start transaction
-            p.set('plus', votes[0][0])
-            p.set('neutral', votes[1][0])
-            p.set('minus', votes[2][0])
-            p.execute()  # transaction end
