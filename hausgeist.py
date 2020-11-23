@@ -1,5 +1,7 @@
 import os
+import random
 from abc import ABC
+from time import sleep
 
 from dotenv import load_dotenv
 from twitchio.dataclasses import Context, Message, Channel
@@ -71,6 +73,14 @@ async def cmd_sounds(ctx):
         "Kenner*innen fahren folgende Manöver im Chat: 🔊 !achso , !andi , !arbeit , !asozial , !bah , !ban , !bier , !blueprint , !brüller , !channel , !chat , !coden , !content , !dinge , !dumm , !einbauen , !engine , !fail , !fckn , !follow 🔊")
     await ctx.send(
         "🔊 !gehtnicht , !geil , !gumo , !gumosuika , !guna , !heyhahaha , !humor , !hä , !indiemüll , !kaputt , !kommafenster , !käffchen , !langweilig , !maul , !mikkel , !naclear , !nenene , !oberscheiße , !opfer , !panne , !pinkler , !prost , !raus , !schödadudabi , !soklappts , !soklapptsnicht , !spiel , !suikasieht , !suikastolz , !teil , !topagent , !tröte , !utz , !wamaduda, !weißnicht , !äther 🔊")
+
+
+@bot.listen("event_message")
+async def bati(message):
+    if message.author == "bati_mati":
+        if "kappa" in message.content.lower() or random.random() < 0.1:
+            sleep(random.random())
+            await bot.channel().send("bati")
 
 
 bot.run()
