@@ -39,9 +39,11 @@ class KaputtCog:
             else:
                 return
 
-        count = self.kaputt["streamer"][name]
-        count[0] = count[0] + 1
-        count[1] = count[1] + 1
+        if add:
+            count = self.kaputt["streamer"][name]
+            count[0] = count[0] + 1
+            count[1] = count[1] + 1
+
         await ctx.send(
             f'{name.capitalize()} hat heute schon {self.kaputt["streamer"][name][0]} mal das Projekt kaputt gemacht! '
             f'Insgesamt sogar schon mindestens {self.kaputt["streamer"][name][1]} mal!!! So klappt es nicht!')
