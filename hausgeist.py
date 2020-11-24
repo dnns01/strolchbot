@@ -8,6 +8,7 @@ from twitchio.dataclasses import Context, Message, Channel
 from twitchio.ext import commands
 
 from giveaway_cog import GiveawayGog
+from kaputt_cog import KaputtCog
 from vote_cog import VoteCog
 
 load_dotenv()
@@ -35,6 +36,7 @@ class HaugeBot(commands.Bot, ABC):
                          client_secret=CLIENT_SECRET)
         self.add_cog(GiveawayGog(self))
         self.add_cog(VoteCog(self))
+        self.add_cog(KaputtCog(self))
 
     @staticmethod
     async def send_me(ctx, content, color):
