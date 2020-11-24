@@ -1,7 +1,7 @@
 import os
 import random
 from abc import ABC
-from time import sleep
+from time import sleep, time
 
 from dotenv import load_dotenv
 from twitchio.dataclasses import Context, Message, Channel
@@ -27,6 +27,10 @@ class HaugeBot(commands.Bot, ABC):
         self.NICK = os.getenv("NICK")
         self.CHANNEL = os.getenv("CHANNEL")
         self.PREFIX = os.getenv("PREFIX")
+        self.BATI_PROBABILITY = float(os.getenv("BATI_PROBABILITY"))
+        self.BATI_KAPPA_PROBABILITY = float(os.getenv("BATI_KAPPA_PROBABILITY"))
+        self.BATI_DELAY = int(os.getenv("BATI_DELAY"))
+        self.last_bati = 0
         super().__init__(irc_token=IRC_TOKEN, prefix=PREFIX, nick=NICK, initial_channels=[CHANNEL], client_id=CLIENT_ID,
                          client_secret=CLIENT_SECRET)
         self.add_cog(GiveawayGog(self))
@@ -78,9 +82,11 @@ async def cmd_sounds(ctx):
 @bot.listen("event_message")
 async def bati(message):
     if message.author == "bati_mati":
-        if "kappa" in message.content.lower() or random.random() < 0.1:
+        if ("kappa" in message.content.lower() and random.random() < bot.BATI_KAPPA_PROBABILITY) \
+                or (random.random() < bot.BATI_PROBABILITY and time() >= bot.last_bati + (bot.BATI_DELAY * 3600)):
             sleep(random.random())
             await bot.channel().send("bati")
+            bot.last_bati = time()
 
 
 bot.run()
