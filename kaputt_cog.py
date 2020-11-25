@@ -30,8 +30,8 @@ class KaputtCog:
         if self.kaputt["stream_date"] != today:
             self.kaputt["stream_date"] = today
 
-            for name in self.kaputt["streamer"].values():
-                name[0] = 0
+            for streamer in self.kaputt["streamer"].values():
+                streamer[0] = 0
 
         if not self.kaputt["streamer"].get(name):
             if add:
