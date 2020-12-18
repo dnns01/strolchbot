@@ -9,18 +9,13 @@ from twitchio.ext import commands
 
 from giveaway_cog import GiveawayGog
 from kaputt_cog import KaputtCog
+from spotify_cog import SpotifyCog
 from vote_cog import VoteCog
 
 load_dotenv()
-IRC_TOKEN = os.getenv("IRC_TOKEN")
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-NICK = os.getenv("NICK")
-CHANNEL = os.getenv("CHANNEL")
-PREFIX = os.getenv("PREFIX")
 
 
-class HaugeBot(commands.Bot, ABC):
+class StrolchiBot(commands.Bot, ABC):
     def __init__(self):
         self.IRC_TOKEN = os.getenv("IRC_TOKEN")
         self.CLIENT_ID = os.getenv("CLIENT_ID")
@@ -32,11 +27,13 @@ class HaugeBot(commands.Bot, ABC):
         self.BATI_KAPPA_PROBABILITY = float(os.getenv("BATI_KAPPA_PROBABILITY"))
         self.BATI_DELAY = int(os.getenv("BATI_DELAY"))
         self.last_bati = 0
-        super().__init__(irc_token=IRC_TOKEN, prefix=PREFIX, nick=NICK, initial_channels=[CHANNEL], client_id=CLIENT_ID,
-                         client_secret=CLIENT_SECRET)
+        super().__init__(irc_token=self.IRC_TOKEN, prefix=self.PREFIX, nick=self.NICK, initial_channels=[self.CHANNEL],
+                         client_id=self.CLIENT_ID,
+                         client_secret=self.CLIENT_SECRET)
         self.add_cog(GiveawayGog(self))
         self.add_cog(VoteCog(self))
         self.add_cog(KaputtCog(self))
+        self.add_cog(SpotifyCog(self))
 
     @staticmethod
     async def send_me(ctx, content, color):
@@ -70,7 +67,7 @@ class HaugeBot(commands.Bot, ABC):
         return await self.get_stream(self.CHANNEL)
 
 
-bot = HaugeBot()
+bot = StrolchiBot()
 
 
 @bot.command(name="sounds")
